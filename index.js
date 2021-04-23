@@ -9,14 +9,37 @@ mongoose.connect('mongodb://localhost/playground',{
 .catch(err=> console.log(err.message));
 
 //create schema 
-
+var enu = {
+    values: ['frontend', 'backend'],
+    message: function(){return `The valid inputs are ${enu.values}`}
+}
 const courseSchema = mongoose.Schema({
-    name: {type:String, required:true},
+    name: {
+        type: String,
+        required: true,
+        minLenght: 3
+    },
     author: String,
-    tags: [String],
+    tags: {
+        type: Array,
+        validate:{
+            validator: function(v){
+                return v && v.lenght>0;
+            },
+            message: "A course must have at least one tags"
+        }
+    },
     date: {type:Date, default:Date.now},
     isPublished: Boolean,
-    price: Number
+    price: {
+        type: Number,
+        required: function(){return this.isPublished;}
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: enu
+    }
 });
 
 const Course = mongoose.model('Course',courseSchema);
@@ -27,7 +50,8 @@ async function createDocument(){
         author: 'Mosh',
         tags: ['Angular', 'frontend'],
         isPublished: true,
-        price: 20
+        price: 20,
+        category: 'backend'
         });
     try{
         const result = await course.save();
