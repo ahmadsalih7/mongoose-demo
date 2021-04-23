@@ -11,12 +11,14 @@ mongoose.connect('mongodb://localhost/playground',{
 //create schema 
 
 const courseSchema = mongoose.Schema({
-    name: String,
+    name: {type:String, required:true},
     author: String,
     tags: [String],
     date: {type:Date, default:Date.now},
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: Number
 });
+
 const Course = mongoose.model('Course',courseSchema);
 //Create model Class
 async function createDocument(){
@@ -24,11 +26,16 @@ async function createDocument(){
         name: 'Angular Course',
         author: 'Mosh',
         tags: ['Angular', 'frontend'],
-        isPublished: true
+        isPublished: true,
+        price: 20
         });
-    const result = await course.save();
-    console.log(result);
-
+    try{
+        const result = await course.save();
+        console.log(result);
+    }
+    catch(err){
+        console.log(err.message);
+    }
 }
 async function getCourses(){
     const courses = await Course.update()
@@ -59,4 +66,4 @@ async function updateCourseFirst(id){
     }, {new: true});
     console.log(course);
 }
-updateCourseFirst('607ed344819b38310421f2f3');
+createDocument();
