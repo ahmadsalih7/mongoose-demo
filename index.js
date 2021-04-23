@@ -34,7 +34,9 @@ const courseSchema = mongoose.Schema({
     isPublished: Boolean,
     price: {
         type: Number,
-        required: function(){return this.isPublished;}
+        required: function(){return this.isPublished;},
+        get: v => Math.round(v),
+        set: v => Math.round(v),
     },
     category: {
         type: String,
@@ -51,7 +53,7 @@ async function createDocument(){
         author: 'Mosh',
         tags: ['backend'],
         isPublished: true,
-        price: 20,
+        price: 20.8,
         category: 'backend'
         });
     try{
