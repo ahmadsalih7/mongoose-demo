@@ -25,6 +25,7 @@ const courseSchema = mongoose.Schema({
         validate:{
             validator: function(v){
                 return v && v.length>0;
+
             },
             message: "A course must have at least one tag"
         }
